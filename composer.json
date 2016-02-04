@@ -1,0 +1,29 @@
+{
+    "name": "schnittstabil/csrf-tokenservice",
+    "type": "library",
+    "description": "CSRF (Cross-Site Request Forgery) token service.",
+    "license": "MIT",
+    "keywords": [ "csrf", "xsrf", "cross-site request forgery", "session riding", "hmac", "stateless", "URL-safe", "token", "service", "generator", "validator" ],
+    "homepage": "https://github.com/schnittstabil/csrf-tokenservice",
+    "authors": [
+        {
+            "name": "Michael Mayer",
+            "email": "michael@schnittstabil.de"
+        }
+    ],
+    "autoload": {
+        "psr-4": { "Schnittstabil\\": "Schnittstabil" }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.0",
+        "fabpot/php-cs-fixer": "^1.10",
+        "satooshi/php-coveralls": "^0.6.1",
+        "codeclimate/php-test-reporter": "^0.2.0",
+        "sami/sami": "^3.1",
+        "squizlabs/php_codesniffer": "^2.5",
+        "vladahejda/phpunit-assert-exception": "^1.0"
+    },
+    "require": {
+        "spomky-labs/base64url": "^1.0"
+    }
+}
