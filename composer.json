@@ -1,7 +1,7 @@
 {
     "name": "schnittstabil/csrf-tokenservice",
     "type": "library",
-    "description": "CSRF (Cross-Site Request Forgery) token service.",
+    "description": "Stateless CSRF (Cross-Site Request Forgery) token service.",
     "license": "MIT",
     "keywords": [ "csrf", "xsrf", "cross-site request forgery", "session riding", "hmac", "stateless", "URL-safe", "token", "service", "generator", "validator" ],
     "homepage": "https://github.com/schnittstabil/csrf-tokenservice",
