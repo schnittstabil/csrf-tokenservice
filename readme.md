@@ -2,7 +2,7 @@
 
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/d03769f0-d78c-49cf-b1a5-7baf8993ff81/big.png)](https://insight.sensiolabs.com/projects/d03769f0-d78c-49cf-b1a5-7baf8993ff81)
 
-> CSRF (Cross-Site Request Forgery) token service.
+> Stateless CSRF (Cross-Site Request Forgery) token service.
 
 
 ## Install
@@ -44,7 +44,7 @@ if (!$tokenService->validate($token)) {
 
 ## Related
 
-* [schnittstabil/psr7-csrf-middleware](https://github.com/schnittstabil/psr7-csrf-middleware) – PSR-7 CSRF protection middleware
+* [schnittstabil/psr7-csrf-middleware](https://github.com/schnittstabil/psr7-csrf-middleware) – (stateless) PSR-7 CSRF protection middleware
 * [schnittstabil/csrf-twig-helpers](https://github.com/schnittstabil/csrf-twig-helpers) – Twig helpers for token rendering
 
 
