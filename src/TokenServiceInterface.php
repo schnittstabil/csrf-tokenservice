@@ -1,6 +1,6 @@
 <?php
 
-namespace Schnittstabil\Csrf;
+namespace Schnittstabil\Csrf\TokenService;
 
 /**
  * The TokenServiceInterface.

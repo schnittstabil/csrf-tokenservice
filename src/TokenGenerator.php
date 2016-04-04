@@ -1,6 +1,6 @@
 <?php
 
-namespace Schnittstabil\Csrf;
+namespace Schnittstabil\Csrf\TokenService;
 
 use Base64Url\Base64Url;
 
@@ -16,8 +16,13 @@ class TokenGenerator
     /**
      * Create a new TokenGenerator.
      *
+     * `$ttl` is used for calculating the expiration time of the tokens, its default value (1440sec === 24min)
+     * correspond to the default `session.gc_maxlifetime`.
+     *
+     * @see http://php.net/manual/en/session.configuration.php Documentation of `session.gc-maxlifetime`.
+     *
      * @param callable $sign Callable used for generating the token signatures.
-     * @param int      $ttl  Default Time to Live in seconds used for calculating the expiration time of the tokens (1440sec === 24min === default of session.gc_maxlifetime).
+     * @param int      $ttl  Default Time to Live in seconds.
      */
     public function __construct(callable $sign, $ttl = 1440)
     {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Schnittstabil\Csrf;
+namespace Schnittstabil\Csrf\TokenService;
 
 /**
  * A TokenService.
@@ -13,8 +13,13 @@ class TokenService implements TokenServiceInterface
     /**
      * Create a new TokenService.
      *
+     * `$ttl` is used for calculating the expiration time of the tokens, its default value (1440sec === 24min)
+     * correspond to the default `session.gc_maxlifetime`.
+     *
+     * @see http://php.net/manual/en/session.configuration.php Documentation of `session.gc-maxlifetime`.
+     *
      * @param string $key  Shared secret key used for generating token signatures.
-     * @param int    $ttl  Default Time to Live in seconds used for calculating the expiration time of the tokens (1440sec === 24min === default of session.gc_maxlifetime).
+     * @param int    $ttl  Default Time to Live in seconds.
      * @param string $algo Name of hashing algorithm. See hash_algos() for a list of supported algorithms.
      */
     public function __construct($key, $ttl = 1440, $algo = 'SHA512')

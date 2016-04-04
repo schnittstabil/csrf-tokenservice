@@ -1,15 +1,16 @@
 <?php
 
-namespace Schnittstabil\Csrf;
+namespace Schnittstabil\Csrf\TokenService;
 
 use Base64Url\Base64Url;
+use VladaHejda\AssertException;
 
 /**
  * TokenGenerator Tests.
  */
 class TokenGeneratorTest extends \PHPUnit_Framework_TestCase
 {
-    use \VladaHejda\AssertException;
+    use AssertException;
 
     protected $signatory;
 

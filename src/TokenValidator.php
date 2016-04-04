@@ -1,6 +1,6 @@
 <?php
 
-namespace Schnittstabil\Csrf;
+namespace Schnittstabil\Csrf\TokenService;
 
 use Base64Url\Base64Url;
 
@@ -47,9 +47,9 @@ class TokenValidator
     /**
      * Parse a CSRF token.
      *
-     * @param string $token The token to parse
+     * @param string $token The token to parse.
      *
-     * @return \stdClass Parse result containing payload and constraint violations; if $token is parsable, an empty array
+     * @return \stdClass Parse result containing payload and constraint violations.
      */
     protected function parse($token)
     {

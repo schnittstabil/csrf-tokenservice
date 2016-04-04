@@ -2,7 +2,7 @@
 
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/d03769f0-d78c-49cf-b1a5-7baf8993ff81/big.png)](https://insight.sensiolabs.com/projects/d03769f0-d78c-49cf-b1a5-7baf8993ff81)
 
-> Stateless CSRF (Cross-Site Request Forgery) token service.
+> Stateless CSRF (Cross-Site Request Forgery) token service :meat_on_bone:
 
 
 ## Install
@@ -18,7 +18,7 @@ $ composer require schnittstabil/csrf-tokenservice
 <?php
 require __DIR__.'/vendor/autoload.php';
 
-use Schnittstabil\Csrf\TokenService;
+use Schnittstabil\Csrf\TokenService\TokenService;
 
 // Shared secret key used for generating and validating token signatures:
 $key = 'This key is not so secret - change it!';

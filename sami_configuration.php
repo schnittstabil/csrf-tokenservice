@@ -8,13 +8,13 @@ use Symfony\Component\Finder\Finder;
 $iterator = Finder::create()
     ->files()
     ->name('*.php')
-    ->in('Schnittstabil');
+    ->in('src');
 
 return new Sami(
     $iterator,
     array(
         'title' => 'Schnittstabil\Csrf\TokenService API',
-        'build_dir' => __DIR__.'/doc',
+        'build_dir' => __DIR__.'/build/doc',
         'cache_dir' => __DIR__.'/build/cache',
         'default_opened_level' => 2,
     )
