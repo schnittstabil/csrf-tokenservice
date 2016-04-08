@@ -26,7 +26,6 @@
         "fabpot/php-cs-fixer": "^1.10",
         "halleck45/phpmetrics": "^1.8",
         "phpmd/phpmd": "^2.3",
-        "sami/sami": "^3.1",
         "satooshi/php-coveralls": "^1.0.1",
         "schnittstabil/sugared-phpunit": "^0.2.0",
         "squizlabs/php_codesniffer": "^2.5",
@@ -35,15 +34,14 @@
     "scripts": {
         "clean": "rm -rf build/",
         "doc": [
-            "sami.php update sami_configuration.php -v",
+            "sugared-sami",
             "phpmetrics --report-html build/phpmetrics/metrics.html src/"
         ],
         "lint": [
             "phpcs -s --standard=PSR1,PSR2 src/ tests/",
             "phpmd src text cleancode,codesize,controversial,design,naming,unusedcode",
             "php-cs-fixer fix --dry-run --diff src",
-            "php-cs-fixer fix --dry-run --diff tests",
-            "php-cs-fixer fix --dry-run --diff *.php"
+            "php-cs-fixer fix --dry-run --diff tests"
         ],
         "test": [
             "sugared-phpunit",
