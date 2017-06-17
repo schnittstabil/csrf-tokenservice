@@ -34,14 +34,12 @@ class TokenValidator
     public function __invoke($token, $now = null)
     {
         $parseResult = $this->parse($token);
-        $violations = $parseResult->violations;
-        $payload = $parseResult->payload;
 
-        if ($violations) {
+        if ($violations = $parseResult->violations) {
             return $violations;
         }
 
-        return array_merge($violations, $this->validatePayload($payload, $now ?: time()));
+        return $this->validatePayload($parseResult->payload, $now);
     }
 
     /**
@@ -92,6 +90,7 @@ class TokenValidator
      */
     protected function validatePayload(\stdClass $payload, $now = null)
     {
+        $now = $now ?: time();
         $violations = [];
 
         if ($payload->exp < $now) {

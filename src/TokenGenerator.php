@@ -71,11 +71,10 @@ class TokenGenerator
             throw new \InvalidArgumentException('exp before iat');
         }
 
-        $payload = [
-            'iat' => $iat,
-            'ttl' => $exp - $iat,
-            'exp' => $exp,
-        ];
+        $payload = new \stdClass();
+        $payload->iat = $iat;
+        $payload->ttl = $exp - $iat;
+        $payload->exp = $exp;
 
         $payloadBase64 = $this->base64url->encode(json_encode($payload));
         $sign = $this->sign;
