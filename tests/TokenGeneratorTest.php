@@ -37,11 +37,19 @@ class TokenGeneratorTest extends \PHPUnit_Framework_TestCase
         }, \InvalidArgumentException::class);
     }
 
+    public function testNonStringNounceShouldThrowExceptions()
+    {
+        $this->assertException(function () {
+            $sut = new TokenGenerator($this->signatory);
+            $sut(666);
+        }, \InvalidArgumentException::class);
+    }
+
     public function testNonIntIatShouldThrowExceptions()
     {
         $this->assertException(function () {
             $sut = new TokenGenerator($this->signatory);
-            $sut('today');
+            $sut('666', 'today');
         }, \InvalidArgumentException::class);
     }
 
@@ -49,7 +57,7 @@ class TokenGeneratorTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertException(function () {
             $sut = new TokenGenerator($this->signatory);
-            $sut(time(), 'today');
+            $sut('666', time(), 'today');
         }, \InvalidArgumentException::class);
     }
 
@@ -58,14 +66,14 @@ class TokenGeneratorTest extends \PHPUnit_Framework_TestCase
         $this->assertException(function () {
             $sut = new TokenGenerator($this->signatory);
             $now = time();
-            $sut($now + 1, $now);
+            $sut('666', $now + 1, $now);
         }, \InvalidArgumentException::class);
     }
 
     public function testIatShouldBeValid()
     {
         $sut = new TokenGenerator($this->signatory);
-        $token = $sut(42);
+        $token = $sut('666', 42);
         $payload = self::extractPayload($token);
 
         $this->assertSame(42, $payload->iat);
@@ -74,7 +82,7 @@ class TokenGeneratorTest extends \PHPUnit_Framework_TestCase
     public function testExpShouldBeValid()
     {
         $sut = new TokenGenerator($this->signatory);
-        $token = $sut(1, 42);
+        $token = $sut('666', 1, 42);
         $payload = self::extractPayload($token);
 
         $this->assertSame(42, $payload->exp);
@@ -83,7 +91,7 @@ class TokenGeneratorTest extends \PHPUnit_Framework_TestCase
     public function testTtlShouldBeValid()
     {
         $sut = new TokenGenerator($this->signatory);
-        $token = $sut();
+        $token = $sut('666');
         $payload = self::extractPayload($token);
 
         $this->assertGreaterThanOrEqual(0, $payload->ttl);

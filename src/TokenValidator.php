@@ -26,12 +26,13 @@ class TokenValidator
     /**
      * Determine constraint violations of a CSRF token.
      *
+     * @param string $nonce Value used to associate a client session
      * @param string $token The token to validate
      * @param int    $now   The current time, defaults to `time()`
      *
      * @return InvalidArgumentException[] Constraint violations; if $token is valid, an empty array
      */
-    public function __invoke($token, $now = null)
+    public function __invoke($nonce, $token, $now = null)
     {
         $parseResult = $this->parse($token);
 
@@ -39,7 +40,7 @@ class TokenValidator
             return $violations;
         }
 
-        return $this->validatePayload($parseResult->payload, $now);
+        return $this->validatePayload($nonce, $parseResult->payload, $now);
     }
 
     /**
@@ -82,12 +83,13 @@ class TokenValidator
     /**
      * Validate the payload of a CSRF token.
      *
+     * @param string    $nonce   Value used to associate a client session
      * @param \stdClass $payload The token payload to validate
      * @param int       $now     The current time, defaults to `time()`
      *
      * @return InvalidArgumentException[] Constraint violations; if $payload is valid, an empty array
      */
-    protected function validatePayload(\stdClass $payload, $now = null)
+    protected function validatePayload($nonce, \stdClass $payload, $now = null)
     {
         $now = $now ?: time();
         $violations = [];
@@ -100,6 +102,10 @@ class TokenValidator
         if ($now < $payload->iat) {
             $issuedAt = date(\DateTime::ISO8601, $payload->iat);
             $violations[] = new \InvalidArgumentException('Cannot handle token prior to '.$issuedAt);
+        }
+
+        if ($payload->nonce !== $nonce) {
+            $violations[] = new \InvalidArgumentException('Nonce mismatch');
         }
 
         return $violations;

@@ -20,7 +20,7 @@ class TokenValidatorTest extends \PHPUnit_Framework_TestCase
     public function testEmptyTokensShouldReturnViolations()
     {
         $sut = new TokenValidator($this->signatory);
-        $this->assertValidationsContain($sut(''), function ($validation) {
+        $this->assertValidationsContain($sut('666', ''), function ($validation) {
             return strpos($validation->getMessage(), 'Wrong number of segments') !== false;
         });
     }
@@ -29,7 +29,7 @@ class TokenValidatorTest extends \PHPUnit_Framework_TestCase
     {
         $sut = new TokenValidator($this->signatory);
         $token = Base64Url::encode(json_encode(new \stdClass())).'.';
-        $this->assertValidationsContain($sut($token), function ($validation) {
+        $this->assertValidationsContain($sut('666', $token), function ($validation) {
             return strpos($validation->getMessage(), 'Signature verification') !== false;
         });
     }
@@ -40,8 +40,19 @@ class TokenValidatorTest extends \PHPUnit_Framework_TestCase
         $payload = Base64Url::encode(json_encode([]));
         $sign = $this->signatory;
         $token = $payload.'.'.$sign($payload);
-        $this->assertValidationsContain($sut($token), function ($validation) {
+        $this->assertValidationsContain($sut('666', $token), function ($validation) {
             return strpos($validation->getMessage(), 'payload encoding') !== false;
+        });
+    }
+
+    public function testNonceMismatchShouldReturnViolations()
+    {
+        $sut = new TokenValidator($this->signatory);
+        $generate = $this->generator;
+        $token = $generate('666');
+
+        $this->assertValidationsContain($sut('777', $token), function ($validation) {
+            return strpos($validation->getMessage(), 'Nonce mismatch') !== false;
         });
     }
 
@@ -49,9 +60,9 @@ class TokenValidatorTest extends \PHPUnit_Framework_TestCase
     {
         $sut = new TokenValidator($this->signatory);
         $generate = $this->generator;
-        $token = $generate(1, 2);
+        $token = $generate('666', 1, 2);
 
-        $this->assertValidationsContain($sut($token), function ($validation) {
+        $this->assertValidationsContain($sut('666', $token), function ($validation) {
             return strpos($validation->getMessage(), 'already expired') !== false;
         });
     }
@@ -60,9 +71,9 @@ class TokenValidatorTest extends \PHPUnit_Framework_TestCase
     {
         $sut = new TokenValidator($this->signatory);
         $generate = $this->generator;
-        $token = $generate(time() + 24 * 60 * 60);
+        $token = $generate('666', time() + 24 * 60 * 60);
 
-        $this->assertValidationsContain($sut($token), function ($validation) {
+        $this->assertValidationsContain($sut('666', $token), function ($validation) {
             return strpos($validation->getMessage(), 'token prior to') !== false;
         });
     }

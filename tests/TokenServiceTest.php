@@ -10,11 +10,11 @@ class TokenServiceTest extends \PHPUnit_Framework_TestCase
     public function testValidTokensShouldReturnNoViolations()
     {
         $sut = new TokenService('secret');
-        $token = $sut->generate(1);
+        $token = $sut->generate('666', 1);
 
         $this->assertNotEmpty($token);
         $this->assertContains('.', $token);
-        $this->assertSame([], $sut->getConstraintViolations($token, 2));
-        $this->assertTrue($sut->validate($token, 2));
+        $this->assertSame([], $sut->getConstraintViolations('666', $token, 2));
+        $this->assertTrue($sut->validate('666', $token, 2));
     }
 }

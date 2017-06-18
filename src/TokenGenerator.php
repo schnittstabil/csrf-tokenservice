@@ -42,14 +42,15 @@ class TokenGenerator
     /**
      * Generate a CSRF token.
      *
-     * @param int $iat The time that the token was issued, defaults to `time()`
-     * @param int $exp The expiration time, defaults to `$iat + $this->ttl`
+     * @param string $nonce Value used to associate a client session
+     * @param int    $iat   The time that the token was issued, defaults to `time()`
+     * @param int    $exp   The expiration time, defaults to `$iat + $this->ttl`
      *
      * @return string
      *
-     * @throws \InvalidArgumentException For invalid $iat and $exp arguments
+     * @throws \InvalidArgumentException For invalid $iat, $exp and $nonce arguments
      */
-    public function __invoke($iat = null, $exp = null)
+    public function __invoke($nonce, $iat = null, $exp = null)
     {
         if ($iat === null) {
             $iat = time();
@@ -71,7 +72,12 @@ class TokenGenerator
             throw new \InvalidArgumentException('exp before iat');
         }
 
+        if (!is_string($nonce)) {
+            throw new \InvalidArgumentException('nonce is not an string');
+        }
+
         $payload = new \stdClass();
+        $payload->nonce = $nonce;
         $payload->iat = $iat;
         $payload->ttl = $exp - $iat;
         $payload->exp = $exp;

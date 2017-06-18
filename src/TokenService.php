@@ -32,45 +32,48 @@ class TokenService implements TokenServiceInterface
     /**
      * Generate a CSRF token.
      *
-     * @param int $iat The time that the token was issued, defaults to `time()`
-     * @param int $exp The expiration time, defaults to `$iat + $this->ttl`
+     * @param string $nonce Value used to associate a client session
+     * @param int    $iat   The time that the token was issued, defaults to `time()`
+     * @param int    $exp   The expiration time, defaults to `$iat + $this->ttl`
      *
      * @return string
      *
      * @throws \InvalidArgumentException For invalid $iat and $exp arguments
      */
-    public function generate($iat = null, $exp = null)
+    public function generate($nonce, $iat = null, $exp = null)
     {
         $generator = $this->generator;
 
-        return $generator($iat, $exp);
+        return $generator($nonce, $iat, $exp);
     }
 
     /**
      * Determine constraint violations of CSRF tokens.
      *
+     * @param string $nonce Value used to associate a client session
      * @param string $token The token to validate
      * @param int    $now   The current time, defaults to `time()`
      *
      * @return InvalidArgumentException[] Constraint violations; if $token is valid, an empty array
      */
-    public function getConstraintViolations($token, $now = null)
+    public function getConstraintViolations($nonce, $token, $now = null)
     {
         $validator = $this->validator;
 
-        return $validator($token, $now);
+        return $validator($nonce, $token, $now);
     }
 
     /**
      * Validate a CSRF token.
      *
+     * @param string $nonce Value used to associate a client session
      * @param string $token The token to validate
      * @param int    $now   The current time, defaults to `time()`
      *
      * @return bool true iff $token is valid
      */
-    public function validate($token, $now = null)
+    public function validate($nonce, $token, $now = null)
     {
-        return count($this->getConstraintViolations($token, $now)) === 0;
+        return count($this->getConstraintViolations($nonce, $token, $now)) === 0;
     }
 }
