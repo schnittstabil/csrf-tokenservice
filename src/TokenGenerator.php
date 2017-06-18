@@ -40,6 +40,26 @@ class TokenGenerator
     }
 
     /**
+     * Generate the payload of a CSRF token.
+     *
+     * @param string $nonce Value used to associate a client session
+     * @param int    $iat   The time that the token was issued, defaults to `time()`
+     * @param int    $exp   The expiration time
+     *
+     * @return \stdClass
+     */
+    protected function generatePayload($nonce, $iat, $exp)
+    {
+        $payload = new \stdClass();
+        $payload->nonce = $nonce;
+        $payload->iat = $iat;
+        $payload->ttl = $exp - $iat;
+        $payload->exp = $exp;
+
+        return $payload;
+    }
+
+    /**
      * Generate a CSRF token.
      *
      * @param string $nonce Value used to associate a client session
@@ -76,12 +96,7 @@ class TokenGenerator
             throw new \InvalidArgumentException('nonce is not an string');
         }
 
-        $payload = new \stdClass();
-        $payload->nonce = $nonce;
-        $payload->iat = $iat;
-        $payload->ttl = $exp - $iat;
-        $payload->exp = $exp;
-
+        $payload = $this->generatePayload($nonce, $iat, $exp);
         $payloadBase64 = $this->base64url->encode(json_encode($payload));
         $sign = $this->sign;
 
