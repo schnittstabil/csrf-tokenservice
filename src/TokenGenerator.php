@@ -19,10 +19,10 @@ class TokenGenerator
      * `$ttl` is used for calculating the expiration time of the tokens, its default value (1440sec === 24min)
      * correspond to the default `session.gc_maxlifetime`.
      *
-     * @see http://php.net/manual/en/session.configuration.php Documentation of `session.gc-maxlifetime`.
+     * @see http://php.net/manual/en/session.configuration.php Documentation of `session.gc-maxlifetime`
      *
-     * @param callable $sign Callable used for generating the token signatures.
-     * @param int      $ttl  Default Time to Live in seconds.
+     * @param callable $sign Callable used for generating the token signatures
+     * @param int      $ttl  Default Time to Live in seconds
      */
     public function __construct(callable $sign, $ttl = 1440)
     {
@@ -47,7 +47,7 @@ class TokenGenerator
      *
      * @return string
      *
-     * @throws \InvalidArgumentException For invalid $iat and $exp arguments.
+     * @throws \InvalidArgumentException For invalid $iat and $exp arguments
      */
     public function __invoke($iat = null, $exp = null)
     {

@@ -16,8 +16,8 @@ class TokenSignatory
     /**
      * Create a new TokenSignatory.
      *
-     * @param string $key  Shared secret key used for generating token signatures.
-     * @param string $algo Name of hashing algorithm. See hash_algos() for a list of supported algorithms.
+     * @param string $key  Shared secret key used for generating token signatures
+     * @param string $algo Name of hashing algorithm. See hash_algos() for a list of supported algorithms
      */
     public function __construct($key, $algo = 'SHA512')
     {

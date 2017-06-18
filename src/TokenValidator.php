@@ -15,7 +15,7 @@ class TokenValidator
     /**
      * Create a new TokenValidator.
      *
-     * @param callable $sign Callable used for generating the token signatures.
+     * @param callable $sign Callable used for generating the token signatures
      */
     public function __construct(callable $sign)
     {
@@ -26,10 +26,10 @@ class TokenValidator
     /**
      * Determine constraint violations of a CSRF token.
      *
-     * @param string $token The token to validate.
-     * @param int    $now   The current time, defaults to `time()`.
+     * @param string $token The token to validate
+     * @param int    $now   The current time, defaults to `time()`
      *
-     * @return InvalidArgumentException[] Constraint violations; if $token is valid, an empty array.
+     * @return InvalidArgumentException[] Constraint violations; if $token is valid, an empty array
      */
     public function __invoke($token, $now = null)
     {
@@ -45,13 +45,12 @@ class TokenValidator
     /**
      * Parse a CSRF token.
      *
-     * @param string $token The token to parse.
+     * @param string $token The token to parse
      *
-     * @return \stdClass Parse result containing payload and constraint violations.
+     * @return \stdClass Parse result containing payload and constraint violations
      */
     protected function parse($token)
     {
-        // craving for PHP7 Anonymous Classes - in the meantime we use stdClass as result...
         $result = new \stdClass();
         $result->violations = [];
         $result->payload = null;
@@ -83,10 +82,10 @@ class TokenValidator
     /**
      * Validate the payload of a CSRF token.
      *
-     * @param \stdClass $payload The token payload to validate.
-     * @param int       $now     The current time, defaults to `time()`.
+     * @param \stdClass $payload The token payload to validate
+     * @param int       $now     The current time, defaults to `time()`
      *
-     * @return InvalidArgumentException[] Constraint violations; if $payload is valid, an empty array.
+     * @return InvalidArgumentException[] Constraint violations; if $payload is valid, an empty array
      */
     protected function validatePayload(\stdClass $payload, $now = null)
     {

@@ -16,11 +16,11 @@ class TokenService implements TokenServiceInterface
      * `$ttl` is used for calculating the expiration time of the tokens, its default value (1440sec === 24min)
      * correspond to the default `session.gc_maxlifetime`.
      *
-     * @see http://php.net/manual/en/session.configuration.php Documentation of `session.gc-maxlifetime`.
+     * @see http://php.net/manual/en/session.configuration.php Documentation of `session.gc-maxlifetime`
      *
-     * @param string $key  Shared secret key used for generating token signatures.
-     * @param int    $ttl  Default Time to Live in seconds.
-     * @param string $algo Name of hashing algorithm. See hash_algos() for a list of supported algorithms.
+     * @param string $key  Shared secret key used for generating token signatures
+     * @param int    $ttl  Default Time to Live in seconds
+     * @param string $algo Name of hashing algorithm. See hash_algos() for a list of supported algorithms
      */
     public function __construct($key, $ttl = 1440, $algo = 'SHA512')
     {
@@ -37,7 +37,7 @@ class TokenService implements TokenServiceInterface
      *
      * @return string
      *
-     * @throws \InvalidArgumentException For invalid $iat and $exp arguments.
+     * @throws \InvalidArgumentException For invalid $iat and $exp arguments
      */
     public function generate($iat = null, $exp = null)
     {
@@ -47,12 +47,12 @@ class TokenService implements TokenServiceInterface
     }
 
     /**
-     * Determine constraint violations of a CSRF tokens.
+     * Determine constraint violations of CSRF tokens.
      *
-     * @param string $token The token to validate.
-     * @param int    $now   The current time, defaults to `time()`.
+     * @param string $token The token to validate
+     * @param int    $now   The current time, defaults to `time()`
      *
-     * @return InvalidArgumentException[] Constraint violations; if $token is valid, an empty array.
+     * @return InvalidArgumentException[] Constraint violations; if $token is valid, an empty array
      */
     public function getConstraintViolations($token, $now = null)
     {
@@ -64,10 +64,10 @@ class TokenService implements TokenServiceInterface
     /**
      * Validate a CSRF token.
      *
-     * @param string $token The token to validate.
-     * @param int    $now   The current time, defaults to `time()`.
+     * @param string $token The token to validate
+     * @param int    $now   The current time, defaults to `time()`
      *
-     * @return bool true iff $token is valid.
+     * @return bool true iff $token is valid
      */
     public function validate($token, $now = null)
     {
