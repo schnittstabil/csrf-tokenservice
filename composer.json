@@ -12,10 +12,17 @@
         }
     ],
     "autoload": {
-        "psr-4": { "Schnittstabil\\Csrf\\TokenService\\": "src" }
+        "psr-4": {
+            "Schnittstabil\\Csrf\\TokenService\\": "src"
+        }
     },
     "autoload-dev": {
-        "psr-4": { "Schnittstabil\\Csrf\\TokenService\\": "tests" }
+        "psr-4": {
+            "Schnittstabil\\Csrf\\TokenService\\": "tests"
+        }
+    },
+    "config": {
+        "sort-packages": true
     },
     "require": {
         "php": ">=5.6.0",
@@ -27,18 +34,18 @@
     "scripts": {
         "clean": "rm -rf build/",
         "doc": [
-            "sugared-sami",
-            "phpmetrics --report-html build/phpmetrics/metrics.html src/"
+            "sugared-rim-sami",
+            "phpmetrics --report-html build/phpmetrics/index.html src/"
         ],
         "lint": [
-            "phpcs -s --standard=PSR1,PSR2 src/ tests/",
-            "phpmd src text cleancode,codesize,controversial,design,naming,unusedcode",
-            "php-cs-fixer fix --dry-run --diff src",
-            "php-cs-fixer fix --dry-run --diff tests"
+            "sugared-rim-cs"
         ],
         "test": [
-            "schnittstabil-phpunit-starter",
+            "@travis",
             "@lint"
+        ],
+        "travis": [
+            "schnittstabil-phpunit-starter"
         ]
     }
 }

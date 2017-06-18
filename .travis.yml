@@ -1,21 +1,27 @@
 language: php
 
-php:
-  - 5.6
-  - 7
-  - hhvm
-
-sudo: false
+matrix:
+  include:
+    - php: 5.6
+    - php: 7
+      env: LINT=yes QA=yes
+    - php: 7.1
+    - php: nightly
 
 install:
-  - composer install --no-interaction
+  - composer selfupdate
+  - if [ "$LINT" == "yes" ]; then composer global require --update-no-dev sugared-rim/cs; fi
+  - composer install
+  - if [ "$QA" == "yes" ]; then composer global require --update-no-dev codeclimate/php-test-reporter:dev-master satooshi/php-coveralls; fi
+  - export PATH=$PATH:`composer global config bin-dir --absolute`
 
 script:
-  - composer test
+  - composer travis
+  - if [ "$LINT" == "yes" ]; then composer lint; fi
 
 after_success:
-  - if [ "$TRAVIS_PHP_VERSION" == "5.6" ]; then travis_retry vendor/bin/test-reporter; fi
-  - if [ "$TRAVIS_PHP_VERSION" == "5.6" ]; then travis_retry vendor/bin/coveralls -v; fi
+  - if [ "$QA" == "yes" ]; then coveralls -v; fi
+  - if [ "$QA" == "yes" ]; then test-reporter; fi
 
 addons:
   code_climate:
