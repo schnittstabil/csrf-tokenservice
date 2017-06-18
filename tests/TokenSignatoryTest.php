@@ -2,21 +2,25 @@
 
 namespace Schnittstabil\Csrf\TokenService;
 
+use InvalidArgumentException;
 use Base64Url\Base64Url;
-use VladaHejda\AssertException;
 
 /**
  * TokenSignatory Tests.
  */
-class TokenSignatoryTest extends \PHPUnit_Framework_TestCase
+class TokenSignatoryTest extends \PHPUnit\Framework\TestCase
 {
-    use AssertException;
+    protected $base64url;
+
+    protected function setUp()
+    {
+        $this->base64url = new Base64Url();
+    }
 
     public function testEmptyKeysShouldThrowExceptions()
     {
-        $this->assertException(function () {
-            new TokenSignatory('');
-        }, \InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
+        new TokenSignatory('');
     }
 
     public function testShouldSignWithSha512()
@@ -34,7 +38,7 @@ class TokenSignatoryTest extends \PHPUnit_Framework_TestCase
 
     public function testShouldSignWithSha256()
     {
-        $rfc7515Key = Base64Url::decode(
+        $rfc7515Key = $this->base64url->decode(
             'AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow'
         );
         $rfc7515Token = 'eyJ0eXAiOiJKV1QiLA0KICJhbGciOiJIUzI1NiJ9.'.

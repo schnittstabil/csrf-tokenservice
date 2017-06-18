@@ -5,10 +5,11 @@ namespace Schnittstabil\Csrf\TokenService;
 /**
  * TokenService Usage Tests.
  */
-class TokenServiceUsageTest extends \PHPUnit_Framework_TestCase
+class TokenServiceUsageTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @runInSeparateProcess
+     * @SuppressWarnings(PHPMD.Superglobals)
      */
     public function testUsage()
     {

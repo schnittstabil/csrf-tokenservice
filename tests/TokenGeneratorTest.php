@@ -2,79 +2,77 @@
 
 namespace Schnittstabil\Csrf\TokenService;
 
+use InvalidArgumentException;
 use Base64Url\Base64Url;
-use VladaHejda\AssertException;
 
 /**
  * TokenGenerator Tests.
+ *
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
-class TokenGeneratorTest extends \PHPUnit_Framework_TestCase
+class TokenGeneratorTest extends \PHPUnit\Framework\TestCase
 {
-    use AssertException;
-
+    protected $base64url;
     protected $signatory;
 
     protected function setUp()
     {
+        $this->base64url = new Base64Url();
         $this->signatory = new TokenSignatory('secret');
     }
 
     public function testNonIntTtlsShouldThrowExceptions()
     {
-        $this->assertException(function () {
-            new TokenGenerator($this->signatory, '');
-        }, \InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
+        new TokenGenerator($this->signatory, '');
     }
 
-    public function testNonPositiveIntTtlsShouldThrowExceptions()
+    public function testZeroIntTtlsShouldThrowExceptions()
     {
-        $this->assertException(function () {
-            new TokenGenerator($this->signatory, 0);
-        }, \InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
+        new TokenGenerator($this->signatory, 0);
+    }
 
-        $this->assertException(function () {
-            new TokenGenerator($this->signatory, -1);
-        }, \InvalidArgumentException::class);
+    public function testNegativeIntTtlsShouldThrowExceptions()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        new TokenGenerator($this->signatory, -1);
     }
 
     public function testNonStringNounceShouldThrowExceptions()
     {
-        $this->assertException(function () {
-            $sut = new TokenGenerator($this->signatory);
-            $sut(666);
-        }, \InvalidArgumentException::class);
+        $sut = new TokenGenerator($this->signatory);
+        $this->expectException(InvalidArgumentException::class);
+        $sut(666);
     }
 
     public function testNonIntIatShouldThrowExceptions()
     {
-        $this->assertException(function () {
-            $sut = new TokenGenerator($this->signatory);
-            $sut('666', 'today');
-        }, \InvalidArgumentException::class);
+        $sut = new TokenGenerator($this->signatory);
+        $this->expectException(InvalidArgumentException::class);
+        $sut('666', 'today');
     }
 
     public function testNonIntExpShouldThrowExceptions()
     {
-        $this->assertException(function () {
-            $sut = new TokenGenerator($this->signatory);
-            $sut('666', time(), 'today');
-        }, \InvalidArgumentException::class);
+        $sut = new TokenGenerator($this->signatory);
+        $this->expectException(InvalidArgumentException::class);
+        $sut('666', time(), 'today');
     }
 
     public function testNonExpBeforeIntExpShouldThrowExceptions()
     {
-        $this->assertException(function () {
-            $sut = new TokenGenerator($this->signatory);
-            $now = time();
-            $sut('666', $now + 1, $now);
-        }, \InvalidArgumentException::class);
+        $sut = new TokenGenerator($this->signatory);
+        $now = time();
+        $this->expectException(InvalidArgumentException::class);
+        $sut('666', $now + 1, $now);
     }
 
     public function testIatShouldBeValid()
     {
         $sut = new TokenGenerator($this->signatory);
         $token = $sut('666', 42);
-        $payload = self::extractPayload($token);
+        $payload = $this->extractPayload($token);
 
         $this->assertSame(42, $payload->iat);
     }
@@ -83,7 +81,7 @@ class TokenGeneratorTest extends \PHPUnit_Framework_TestCase
     {
         $sut = new TokenGenerator($this->signatory);
         $token = $sut('666', 1, 42);
-        $payload = self::extractPayload($token);
+        $payload = $this->extractPayload($token);
 
         $this->assertSame(42, $payload->exp);
     }
@@ -92,14 +90,14 @@ class TokenGeneratorTest extends \PHPUnit_Framework_TestCase
     {
         $sut = new TokenGenerator($this->signatory);
         $token = $sut('666');
-        $payload = self::extractPayload($token);
+        $payload = $this->extractPayload($token);
 
         $this->assertGreaterThanOrEqual(0, $payload->ttl);
         $this->assertSame($payload->exp - $payload->iat, $payload->ttl);
     }
 
-    protected static function extractPayload($token)
+    protected function extractPayload($token)
     {
-        return json_decode(Base64Url::decode(explode('.', $token)[0]));
+        return json_decode($this->base64url->decode(explode('.', $token)[0]));
     }
 }

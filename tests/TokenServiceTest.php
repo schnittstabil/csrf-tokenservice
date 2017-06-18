@@ -5,7 +5,7 @@ namespace Schnittstabil\Csrf\TokenService;
 /**
  * TokenService Tests.
  */
-class TokenServiceTest extends \PHPUnit_Framework_TestCase
+class TokenServiceTest extends \PHPUnit\Framework\TestCase
 {
     public function testValidTokensShouldReturnNoViolations()
     {

@@ -7,12 +7,15 @@ use Base64Url\Base64Url;
 /**
  * TokenValidator Tests.
  */
-class TokenValidatorTest extends \PHPUnit_Framework_TestCase
+class TokenValidatorTest extends \PHPUnit\Framework\TestCase
 {
+    protected $base64url;
     protected $signatory;
+    protected $generator;
 
     protected function setUp()
     {
+        $this->base64url = new Base64Url();
         $this->signatory = new TokenSignatory('secret');
         $this->generator = new TokenGenerator($this->signatory);
     }
@@ -21,27 +24,27 @@ class TokenValidatorTest extends \PHPUnit_Framework_TestCase
     {
         $sut = new TokenValidator($this->signatory);
         $this->assertValidationsContain($sut('666', ''), function ($validation) {
-            return strpos($validation->getMessage(), 'Wrong number of segments') !== false;
+            return strpos($validation->getMessage(), 'Wrong number of segments');
         });
     }
 
     public function testEmptySignituresShouldReturnViolations()
     {
         $sut = new TokenValidator($this->signatory);
-        $token = Base64Url::encode(json_encode(new \stdClass())).'.';
+        $token = $this->base64url->encode(json_encode(new \stdClass())).'.';
         $this->assertValidationsContain($sut('666', $token), function ($validation) {
-            return strpos($validation->getMessage(), 'Signature verification') !== false;
+            return strpos($validation->getMessage(), 'Signature verification');
         });
     }
 
     public function testNonObjectPayloadsShouldReturnViolations()
     {
         $sut = new TokenValidator($this->signatory);
-        $payload = Base64Url::encode(json_encode([]));
+        $payload = $this->base64url->encode(json_encode([]));
         $sign = $this->signatory;
         $token = $payload.'.'.$sign($payload);
         $this->assertValidationsContain($sut('666', $token), function ($validation) {
-            return strpos($validation->getMessage(), 'payload encoding') !== false;
+            return strpos($validation->getMessage(), 'payload encoding');
         });
     }
 
@@ -52,7 +55,7 @@ class TokenValidatorTest extends \PHPUnit_Framework_TestCase
         $token = $generate('666');
 
         $this->assertValidationsContain($sut('777', $token), function ($validation) {
-            return strpos($validation->getMessage(), 'Nonce mismatch') !== false;
+            return strpos($validation->getMessage(), 'Nonce mismatch');
         });
     }
 
@@ -63,7 +66,7 @@ class TokenValidatorTest extends \PHPUnit_Framework_TestCase
         $token = $generate('666', 1, 2);
 
         $this->assertValidationsContain($sut('666', $token), function ($validation) {
-            return strpos($validation->getMessage(), 'already expired') !== false;
+            return strpos($validation->getMessage(), 'already expired');
         });
     }
 
@@ -74,14 +77,17 @@ class TokenValidatorTest extends \PHPUnit_Framework_TestCase
         $token = $generate('666', time() + 24 * 60 * 60);
 
         $this->assertValidationsContain($sut('666', $token), function ($validation) {
-            return strpos($validation->getMessage(), 'token prior to') !== false;
+            return strpos($validation->getMessage(), 'token prior to');
         });
     }
 
     protected function assertValidationsContain($validations, callable $callback)
     {
         foreach ($validations as $validation) {
-            if ($callback($validation)) {
+            if ($callback($validation) !== false) {
+                // phpunit risky tests workaround
+                $this->assertTrue(true);
+
                 return;
             }
         }
