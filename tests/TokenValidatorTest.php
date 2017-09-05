@@ -65,7 +65,7 @@ class TokenValidatorTest extends \PHPUnit\Framework\TestCase
         $generate = $this->generator;
         $token = $generate('666', 1, 2);
 
-        $this->assertValidationsContain($sut('666', $token), function ($validation) {
+        $this->assertValidationsContain($sut('666', $token, 2), function ($validation) {
             return strpos($validation->getMessage(), 'already expired');
         });
     }
@@ -83,6 +83,8 @@ class TokenValidatorTest extends \PHPUnit\Framework\TestCase
 
     protected function assertValidationsContain($validations, callable $callback)
     {
+        $this->assertNotCount(0, $validations, 'Assertion not found');
+
         foreach ($validations as $validation) {
             if ($callback($validation) !== false) {
                 // phpunit risky tests workaround

@@ -94,7 +94,7 @@ class TokenValidator
         $now = $now ?: time();
         $violations = [];
 
-        if ($payload->exp < $now) {
+        if ($payload->exp <= $now) {
             $exp = date(\DateTime::ISO8601, $payload->exp);
             $violations[] = new \InvalidArgumentException('Token already expired at '.$exp);
         }
