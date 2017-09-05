@@ -26,13 +26,14 @@ class TokenValidator
     /**
      * Determine constraint violations of a CSRF token.
      *
-     * @param string $nonce Value used to associate a client session
-     * @param string $token The token to validate
-     * @param int    $now   The current time, defaults to `time()`
+     * @param string $nonce  Value used to associate a client session
+     * @param string $token  The token to validate
+     * @param int    $now    The current time, defaults to `time()`
+     * @param int    $leeway The leeway in seconds
      *
      * @return InvalidArgumentException[] Constraint violations; if $token is valid, an empty array
      */
-    public function __invoke($nonce, $token, $now = null)
+    public function __invoke($nonce, $token, $now = null, $leeway = 0)
     {
         $parseResult = $this->parse($token);
 
@@ -40,7 +41,7 @@ class TokenValidator
             return $violations;
         }
 
-        return $this->validatePayload($nonce, $parseResult->payload, $now);
+        return $this->validatePayload($nonce, $parseResult->payload, $now, $leeway);
     }
 
     /**
@@ -86,20 +87,21 @@ class TokenValidator
      * @param string    $nonce   Value used to associate a client session
      * @param \stdClass $payload The token payload to validate
      * @param int       $now     The current time, defaults to `time()`
+     * @param int       $leeway  The leeway in seconds
      *
      * @return InvalidArgumentException[] Constraint violations; if $payload is valid, an empty array
      */
-    protected function validatePayload($nonce, \stdClass $payload, $now = null)
+    protected function validatePayload($nonce, \stdClass $payload, $now = null, $leeway = 0)
     {
         $now = $now ?: time();
         $violations = [];
 
-        if ($payload->exp <= $now) {
+        if ($payload->exp + $leeway <= $now) {
             $exp = date(\DateTime::ISO8601, $payload->exp);
             $violations[] = new \InvalidArgumentException('Token already expired at '.$exp);
         }
 
-        if ($now < $payload->iat) {
+        if ($now + $leeway < $payload->iat) {
             $issuedAt = date(\DateTime::ISO8601, $payload->iat);
             $violations[] = new \InvalidArgumentException('Cannot handle token prior to '.$issuedAt);
         }

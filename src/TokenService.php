@@ -56,24 +56,25 @@ class TokenService implements TokenServiceInterface
      *
      * @return InvalidArgumentException[] Constraint violations; if $token is valid, an empty array
      */
-    public function getConstraintViolations($nonce, $token, $now = null)
+    public function getConstraintViolations($nonce, $token, $now = null, $leeway = 0)
     {
         $validator = $this->validator;
 
-        return $validator($nonce, $token, $now);
+        return $validator($nonce, $token, $now, $leeway);
     }
 
     /**
      * Validate a CSRF token.
      *
-     * @param string $nonce Value used to associate a client session
-     * @param string $token The token to validate
-     * @param int    $now   The current time, defaults to `time()`
+     * @param string $nonce  Value used to associate a client session
+     * @param string $token  The token to validate
+     * @param int    $now    The current time, defaults to `time()`
+     * @param int    $leeway The leeway in seconds
      *
      * @return bool true iff $token is valid
      */
-    public function validate($nonce, $token, $now = null)
+    public function validate($nonce, $token, $now = null, $leeway = 0)
     {
-        return count($this->getConstraintViolations($nonce, $token, $now)) === 0;
+        return count($this->getConstraintViolations($nonce, $token, $now, $leeway)) === 0;
     }
 }

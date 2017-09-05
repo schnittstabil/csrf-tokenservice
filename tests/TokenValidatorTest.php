@@ -63,22 +63,43 @@ class TokenValidatorTest extends \PHPUnit\Framework\TestCase
     {
         $sut = new TokenValidator($this->signatory);
         $generate = $this->generator;
-        $token = $generate('666', 1, 2);
-
-        $this->assertValidationsContain($sut('666', $token, 2), function ($validation) {
+        $now = time();
+        $token = $generate('666', $now + 1, $now + 2);
+        $this->assertValidationsContain($sut('666', $token, $now + 2), function ($validation) {
             return strpos($validation->getMessage(), 'already expired');
         });
+    }
+
+    public function testExpiredTokensWithinLeewayShouldNotReturnViolations()
+    {
+        $sut = new TokenValidator($this->signatory);
+        $generate = $this->generator;
+        $now = time();
+        $token = $generate('666', $now + 1, $now + 2);
+
+        $this->assertCount(0, $sut('666', $token, $now + 2, 1));
     }
 
     public function testPreemieTokensShouldReturnViolations()
     {
         $sut = new TokenValidator($this->signatory);
         $generate = $this->generator;
-        $token = $generate('666', time() + 24 * 60 * 60);
+        $now = time();
+        $token = $generate('666', $now + 1, $now + 2);
 
-        $this->assertValidationsContain($sut('666', $token), function ($validation) {
+        $this->assertValidationsContain($sut('666', $token, $now), function ($validation) {
             return strpos($validation->getMessage(), 'token prior to');
         });
+    }
+
+    public function testPreemieTokensWithinLeewayShouldReturnViolations()
+    {
+        $sut = new TokenValidator($this->signatory);
+        $generate = $this->generator;
+        $now = time();
+        $token = $generate('666', $now + 1, $now + 2);
+
+        $this->assertCount(0, $sut('666', $token, $now, 1));
     }
 
     protected function assertValidationsContain($validations, callable $callback)
