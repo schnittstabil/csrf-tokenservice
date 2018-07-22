@@ -25,7 +25,7 @@
         "sort-packages": true
     },
     "require": {
-        "php": ">=5.6.0",
+        "php": ">=7.2",
         "spomky-labs/base64url": "^1.0"
     },
     "require-dev": {

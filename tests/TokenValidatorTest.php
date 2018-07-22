@@ -3,11 +3,12 @@
 namespace Schnittstabil\Csrf\TokenService;
 
 use Base64Url\Base64Url;
+use PHPUnit\Framework\TestCase;
 
 /**
  * TokenValidator Tests.
  */
-class TokenValidatorTest extends \PHPUnit\Framework\TestCase
+class TokenValidatorTest extends TestCase
 {
     protected $base64url;
     protected $signatory;

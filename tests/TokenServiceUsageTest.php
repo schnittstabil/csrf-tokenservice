@@ -2,10 +2,12 @@
 
 namespace Schnittstabil\Csrf\TokenService;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * TokenService Usage Tests.
  */
-class TokenServiceUsageTest extends \PHPUnit\Framework\TestCase
+class TokenServiceUsageTest extends TestCase
 {
     /**
      * @runInSeparateProcess
