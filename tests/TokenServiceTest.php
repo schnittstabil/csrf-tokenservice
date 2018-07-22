@@ -2,10 +2,12 @@
 
 namespace Schnittstabil\Csrf\TokenService;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * TokenService Tests.
  */
-class TokenServiceTest extends \PHPUnit\Framework\TestCase
+class TokenServiceTest extends TestCase
 {
     public function testValidTokensShouldReturnNoViolations()
     {

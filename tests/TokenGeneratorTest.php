@@ -4,13 +4,14 @@ namespace Schnittstabil\Csrf\TokenService;
 
 use InvalidArgumentException;
 use Base64Url\Base64Url;
+use PHPUnit\Framework\TestCase;
 
 /**
  * TokenGenerator Tests.
  *
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
-class TokenGeneratorTest extends \PHPUnit\Framework\TestCase
+class TokenGeneratorTest extends TestCase
 {
     protected $base64url;
     protected $signatory;
