@@ -3,6 +3,7 @@ language: php
 matrix:
   include:
     - php: 7.2
+      env: LINT=yes QA=yes
     - php: nightly
 
 install:
